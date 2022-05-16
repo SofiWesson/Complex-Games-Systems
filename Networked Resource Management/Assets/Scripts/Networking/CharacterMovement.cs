@@ -28,5 +28,17 @@ public class CharacterMovement : NetworkBehaviour
             transform.position += Vector3.right * speed * Time.deltaTime;
         if (Keyboard.current.aKey.isPressed)
             transform.position -= Vector3.right * speed * Time.deltaTime;
+
+        float x = transform.rotation.eulerAngles.x;
+        float y = transform.rotation.eulerAngles.y;
+        float z = transform.rotation.eulerAngles.z;
+
+        if (Keyboard.current.qKey.isPressed)
+            transform.rotation = Quaternion.Euler(x, y - (speed * 10 * Time.deltaTime), z);
+
+        if (Keyboard.current.eKey.isPressed)
+        {
+            transform.rotation = Quaternion.Euler(x, y + (speed * 10 * Time.deltaTime), z);
+        }
     }
 }

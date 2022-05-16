@@ -7,7 +7,6 @@ using UnityEngine.InputSystem;
 public class MarkerMoverNetwork : NetworkBehaviour
 {
     public Transform marker;
-    Camera camera;
 
     // Start is called before the first frame update
     void Start()
@@ -34,11 +33,6 @@ public class MarkerMoverNetwork : NetworkBehaviour
             SetColor(Color.blue);
             gameObject.name = "Blue Player";
         }
-
-        if (!isLocalPlayer)
-            return;
-        
-        camera = GetComponentInChildren<Camera>();
     }
 
     void SetColor(Color col)
@@ -53,8 +47,6 @@ public class MarkerMoverNetwork : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        Camera.SetupCurrent(camera);
-
         // click to move a marker
         {
             if (Mouse.current.leftButton.wasPressedThisFrame)
@@ -62,7 +54,7 @@ public class MarkerMoverNetwork : NetworkBehaviour
                 Vector3 mousePos = Mouse.current.position.ReadValue();
 
                 RaycastHit hit;
-                if (Physics.Raycast(camera.ScreenPointToRay(mousePos), out hit))
+                if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out hit))
                 {
                     CmdSetMarker(hit.point);
                 }
