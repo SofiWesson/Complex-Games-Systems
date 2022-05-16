@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResourceManager : MonoBehaviour
+[CreateAssetMenu(fileName = "Resource Manager", menuName = "Resource Manager/Resource Manager", order = 1)]
+public class ResourceManager : ScriptableObject
 {
     protected List<Resource> resources = new List<Resource>();
     protected List<Attributes> attributes = new List<Attributes>();
 
     private Resource m_resource;
     private Attributes m_attributes;
+
+
 
     // Start is called before the first frame update
     void Start()

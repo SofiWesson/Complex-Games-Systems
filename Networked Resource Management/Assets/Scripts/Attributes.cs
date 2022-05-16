@@ -9,6 +9,10 @@ public class Attributes : MonoBehaviour
     protected Dictionary<string, bool> boolList = new Dictionary<string, bool>();
     protected Dictionary<string, string> stringList = new Dictionary<string, string>();
 
+    private int totalNumOfAttributes = 0;
+
+
+
     public void AddInt(string name, int value)
     {
 
