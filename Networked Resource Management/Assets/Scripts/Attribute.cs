@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Attribute : MonoBehaviour
 {
-    public string name;
-    public Variable variable;
+    [Serializable]
+    public struct AttributeObj
+    {
+        public string name;
+        public Variable.VariableObj variable;
+    }
 }

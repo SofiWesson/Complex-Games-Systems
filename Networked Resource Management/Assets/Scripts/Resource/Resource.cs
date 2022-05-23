@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Resource : ScriptableObject
+public class Resource : MonoBehaviour
 {
-    public string name;
-    public int countInInventory;
-    public Sprite spirte;
-    public List<Variable> variables = new List<Variable>();
-    public List<Attribute> attributes = new List<Attribute>();
+    [Serializable]
+    public struct ResourceObj
+    {
+        public string name;
+        public int countInInventory;
+        public Sprite spirte;
+        [NonReorderable]
+        public List<Variable.VariableObj> variables;
+        [NonReorderable]
+        public List<Attribute.AttributeObj> attributes;
+    }
 }

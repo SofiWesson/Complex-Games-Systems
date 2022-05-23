@@ -19,5 +19,10 @@ public class ResourceManagerEditor : Editor
         {
             manager.AddResource();
         }
+
+        if (GUILayout.Button("Clear All"))
+        {
+            manager.ClearAll();
+        }
     }
 }
