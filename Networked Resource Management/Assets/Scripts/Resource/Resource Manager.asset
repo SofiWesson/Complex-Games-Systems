@@ -12,10 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2faf4d1662bf308498d1441a0d30206f, type: 3}
   m_Name: Resource Manager
   m_EditorClassIdentifier: 
+  attributes:
+  - {fileID: 0}
   resources: []
-  attributes: []
-  i: 0
-  name: 
-  sprite: {fileID: 0}
-  customVariables: []
-  resourceAttributes: []
+  attributeName: 
+  customAttributeVariable:
+    variableName: 
+    variableType: 0
+    variableValue: 
+  resourceName: 
+  resourceSprite: {fileID: 0}
+  customResourceVariables: []
+  resourceAttributes:
+  - {fileID: 0}

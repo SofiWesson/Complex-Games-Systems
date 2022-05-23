@@ -7,5 +7,5 @@ public class CollectionMethod : MonoBehaviour
     public string collectionMethodName = "";
     public bool hasCollectionMethod = false;
     public Sprite sprite = null;
-    protected Attributes attributes;
+    protected Attribute attributes;
 }

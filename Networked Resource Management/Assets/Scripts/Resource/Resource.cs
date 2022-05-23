@@ -3,17 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Resource : MonoBehaviour
+public class Resource : ScriptableObject
 {
-    protected string resourceName;
-    protected int countInInventory;
-    protected Sprite spirte;
-    protected List<Variables.VarialbeTypes> variables;
-    protected Attributes attributes;
-
-    public struct CustomVariable
-    {
-        Variables.VarialbeTypes variable;
-        string value;
-    }
+    public string name;
+    public int countInInventory;
+    public Sprite spirte;
+    public List<Variable> variables = new List<Variable>();
+    public List<Attribute> attributes = new List<Attribute>();
 }

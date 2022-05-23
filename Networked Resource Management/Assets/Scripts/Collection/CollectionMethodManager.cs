@@ -5,10 +5,10 @@ using UnityEngine;
 public class CollectionMethodManager : MonoBehaviour
 {
     protected List<CollectionMethod> collectionMethods = new List<CollectionMethod>();
-    protected List<Attributes> attributes = new List<Attributes>();
+    protected List<Attribute> attributes = new List<Attribute>();
 
     private CollectionMethod m_collectionMethod;
-    private Attributes m_attributes;
+    private Attribute m_attributes;
 
     // Start is called before the first frame update
     void Start()
@@ -32,12 +32,12 @@ public class CollectionMethodManager : MonoBehaviour
 
     }
 
-    private void AddAttribute(Attributes ca)
+    private void AddAttribute(Attribute ca)
     {
 
     }
 
-    private void RemoveAttribute(Attributes ca)
+    private void RemoveAttribute(Attribute ca)
     {
 
     }
