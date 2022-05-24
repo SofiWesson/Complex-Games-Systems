@@ -26,9 +26,4 @@ MonoBehaviour:
     spirte: {fileID: 0}
     variables: []
     attributes: []
-  attributeToRemove:
-    name: 
-    variable:
-      name: 
-      type: 0
-      value: 
+  removeAttribute: []
