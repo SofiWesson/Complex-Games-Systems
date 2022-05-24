@@ -12,8 +12,7 @@ public class Resource : UnityEngine.Object
         public int countInInventory;
         public Sprite spirte;
         [NonReorderable]
-        public List<Variable.VariableObj> variables;
-        [NonReorderable]
         public List<Attribute.AttributeObj> attributes;
+        public List<Variable.VariableObj> variables;
     }
 }
