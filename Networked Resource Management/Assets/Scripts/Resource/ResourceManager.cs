@@ -9,23 +9,28 @@ public class ResourceManager : ScriptableObject
     private List<char> usableChars = new List<char>() { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
     [SerializeField]
+    [Tooltip("One of the attributes.")]
     public List<Attribute.AttributeObj> attributes = new List<Attribute.AttributeObj>();
     [SerializeField]
+    [Tooltip("One of the resources.")]
     public List<Resource.ResourceObj> resources = new List<Resource.ResourceObj>();
 
     [Space(10)]
+    [Tooltip("Create custom attributes.")]
     public Attribute.AttributeObj myCustomAttribute;
+    [Tooltip("Create custom resources.")]
     public Resource.ResourceObj myCustomResource;
 
     [Serializable]
     public struct AttributeRemovable
     {
-        [NonReorderable] public string name;
+        public string name;
         public bool removeThis;
     }
 
     [Space(10)]
     [NonReorderable]
+    [Tooltip("Have 'Remove This' ticked then click the 'Remove Attribute' button to remove one or more attributes")]
     public List<AttributeRemovable> removeAttribute;
 
     public void AddAttributes()
@@ -33,7 +38,7 @@ public class ResourceManager : ScriptableObject
         // checks if attribute name is empty
         if (myCustomAttribute.name == null || myCustomAttribute.name == "")
         {
-            Debug.Log("Attribute name can't be empty.");
+            Debug.LogAssertion("Attribute name can't be empty.");
             return;
         }
 
@@ -45,14 +50,14 @@ public class ResourceManager : ScriptableObject
             // checks if a variable alreay has name
             if (attribute.variable.name == myCustomAttribute.variable.name)
             {
-                Debug.Log("Variable already has this name.");
+                Debug.LogAssertion("Variable already has this name.");
                 return;
             }
 
             // checks if an attribute already has name
             if (attribute.name == myCustomAttribute.name)
             {
-                Debug.Log("Attribute already has this name.");
+                Debug.LogAssertion("Attribute already has this name.");
                 return;
             }
         }
@@ -70,7 +75,7 @@ public class ResourceManager : ScriptableObject
         // checks if resource name is empty
         if (myCustomResource.name == null || myCustomResource.name == "")
         {
-            Debug.Log("Resource name can't be empty.");
+            Debug.LogAssertion("Resource name can't be empty.");
             return;
         }
 
@@ -78,14 +83,29 @@ public class ResourceManager : ScriptableObject
             if (!IsVariableValid(variable))
                 return;
 
-        // check if variable two variables have same name
+
+        // check if two variables have same name
+        for (int i = 0; i < myCustomResource.variables.Count; i++)
+        {
+            for (int j = 0; j < myCustomResource.variables.Count; j++)
+            {
+                if (j != i)
+                {
+                    if (myCustomResource.variables[j].name == myCustomResource.variables[i].name)
+                    {
+                        Debug.LogAssertion("Two variables on this resource have the same name, this is not allowed.");
+                        return;
+                    }
+                }
+            }
+        }
 
         foreach (Resource.ResourceObj resource in resources)
         {
             // check if a resource already as name
             if (myCustomResource.name == resource.name)
             {
-                Debug.Log("Resource already has this name.");
+                Debug.LogAssertion("Resource already has this name.");
                 return;
             } 
         }
@@ -151,7 +171,7 @@ public class ResourceManager : ScriptableObject
         // checks if variable name is empty
         if (variable.name == null || variable.name == "")
         {
-            Debug.Log("Variable name can't be empty.");
+            Debug.LogAssertion("Variable name can't be empty.");
             return false;
         }
 
@@ -160,7 +180,7 @@ public class ResourceManager : ScriptableObject
         {
             if (variable.name[0] == usableChars[i])
             {
-                Debug.Log("Variable name can't start with a number");
+                Debug.LogAssertion("Variable name can't start with a number");
                 return false;
             }
         }
@@ -170,14 +190,14 @@ public class ResourceManager : ScriptableObject
             // checks if variable name only contains '@'
             if (variable.name.Length == 1 && variable.name == "@")
             {
-                Debug.Log("When using '@' in the variable name, there needs to be more then one character.");
+                Debug.LogAssertion("When using '@' in the variable name, there needs to be more then one character.");
                 return false;
             }
 
             // checks if variable name has '@' anywhere but the start
             if (i != 0 && variable.name[i] == '@')
             {
-                Debug.Log("'@' can only be at the beginning of variable.");
+                Debug.LogAssertion("'@' can only be at the beginning of variable.");
                 return false;
             }
 
@@ -191,7 +211,7 @@ public class ResourceManager : ScriptableObject
                 }
                 else if (j == usableChars.Count - 1)
                 {
-                    Debug.Log("Variable name has invalid character");
+                    Debug.LogAssertion("Variable name has invalid character");
                     return false;
                 }
             }
