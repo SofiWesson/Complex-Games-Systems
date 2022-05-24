@@ -20,6 +20,11 @@ public class ResourceManagerEditor : Editor
             manager.AddResource();
         }
 
+        if (GUILayout.Button("Remove Attribute"))
+        {
+            manager.RemoveAttribute();
+        }
+
         if (GUILayout.Button("Clear All"))
         {
             manager.ClearAll();

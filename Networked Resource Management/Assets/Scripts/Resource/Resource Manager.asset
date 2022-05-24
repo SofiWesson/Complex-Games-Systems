@@ -14,14 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes: []
   resources: []
-  viewAttributes: []
-  viewResources: []
-  attributeName: 
-  customAttributeVariable:
-    variableName: 
-    variableType: 0
-    variableValue: 
-  resourceName: 
-  resourceSprite: {fileID: 0}
-  customResourceVariables: []
-  resourceAttributes: []
+  myCustomAttribute:
+    name: 
+    variable:
+      name: 
+      type: 0
+      value: 
+  myCustomResource:
+    name: 
+    countInInventory: 0
+    spirte: {fileID: 0}
+    variables: []
+    attributes: []
+  attributeToRemove:
+    name: 
+    variable:
+      name: 
+      type: 0
+      value: 
