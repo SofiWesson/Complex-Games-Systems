@@ -25,7 +25,7 @@ public class ResourceManager : ScriptableObject
     public Resource.ResourceObj myCustomResource;
 
     [Serializable]
-    public struct AttributeRemovable
+    public struct Removable
     {
         public string name;
         public bool removeThis;
@@ -34,11 +34,14 @@ public class ResourceManager : ScriptableObject
     [Space(10)]
     [NonReorderable]
     [Tooltip("Have 'Remove This' ticked then click the 'Remove Attribute' button to remove one or more attributes")]
-    public List<AttributeRemovable> removeAttribute;
+    public List<Removable> removeAttribute;
+    [NonReorderable]
+    [Tooltip("Have 'Remove This' ticked then click the 'Remove Resource' button to remove one or more resources")]
+    public List<Removable> removeResource;
 
-    // make remove resource
     // make edits for both attributes and resources
     // make reload lists incase user has edited viewable lists
+    // comment code
 
     public void AddAttributes()
     {
@@ -74,7 +77,8 @@ public class ResourceManager : ScriptableObject
         attributesControl.Add(myCustomAttribute);
         SyncAttributes();
         myCustomAttribute = new Attribute.AttributeObj();
-        UpdateResourceAttributesList();
+        UpdateResourcesAttributesList();
+        removeAttribute = UpdateRemovableList("attribute");
 
         foreach (Resource.ResourceObj resource in resourcesControl)
             resource.attributes.Add(myCustomAttribute);
@@ -129,12 +133,12 @@ public class ResourceManager : ScriptableObject
         resourcesControl.Add(myCustomResource);
         SyncResources();
         myCustomResource = new Resource.ResourceObj();
-        UpdateResourceAttributesList();
+        removeResource = UpdateRemovableList("resource");
     }
 
     public void RemoveAttribute()
     {
-        foreach (AttributeRemovable removableAttribute in removeAttribute)
+        foreach (Removable removableAttribute in removeAttribute)
         {
             for (int i = attributesControl.Count - 1; i >= 0; i--)
             {
@@ -160,30 +164,74 @@ public class ResourceManager : ScriptableObject
 
         SyncAttributes();
         SyncResources();
-
-        UpdateResourceAttributesList();
+        UpdateResourcesAttributesList();
+        removeAttribute = UpdateRemovableList("attribute");
     }
 
-    void UpdateResourceAttributesList()
+    public void RemoveResource()
+    {
+        foreach (Removable removableResource in removeResource)
+        {
+            for (int i = resourcesControl.Count - 1; i >= 0; i--)
+            {
+                if (resourcesControl[i].name == removableResource.name && removableResource.removeThis)
+                {
+                    resourcesControl.Remove(resourcesControl[i]);
+                    continue;
+                }
+            }
+        }
+
+        SyncAttributes();
+        SyncResources();
+        removeResource = UpdateRemovableList("resource");
+    }
+
+    void UpdateResourcesAttributesList() // Updates the list of attributes in the resources list
     {
         List<Attribute.AttributeObj> tempAttList = new List<Attribute.AttributeObj>();
-        List<AttributeRemovable> tempRemoveList = new List<AttributeRemovable>();
-
+       
         foreach (Attribute.AttributeObj attribute in attributesControl)
         {
+            // to fill the attributes list in the custom resource
             Attribute.AttributeObj tempAtt = new Attribute.AttributeObj();
             tempAtt.name = attribute.name;
             tempAtt.variable = attribute.variable;
             tempAttList.Add(tempAtt);
-
-            AttributeRemovable tempRemove = new AttributeRemovable();
-            tempRemove.name = attribute.name;
-            tempRemove.removeThis = false;
-            tempRemoveList.Add(tempRemove);
         }
 
         myCustomResource.attributes = tempAttList;
-        removeAttribute = tempRemoveList;
+    }
+
+    /// <summary>
+    /// <paramref name="listToEdit"/> requires "attribute" or "resource"
+    /// </summary>
+    List<Removable> UpdateRemovableList(string listToEdit)
+    {
+        List<Removable> tempRemovableList = new List<Removable>();
+
+        if (listToEdit == "attribute")
+        {
+            foreach (Attribute.AttributeObj attribute in attributesControl)
+            {
+                Removable tempRemove = new Removable();
+                tempRemove.name = attribute.name;
+                tempRemove.removeThis = false;
+                tempRemovableList.Add(tempRemove);
+            }
+        }
+        else if (listToEdit == "resource")
+        {
+            foreach (Resource.ResourceObj resource in resourcesControl)
+            {
+                Removable tempRemove = new Removable();
+                tempRemove.name = resource.name;
+                tempRemove.removeThis = false;
+                tempRemovableList.Add(tempRemove);
+            }
+        }
+
+        return tempRemovableList;
     }
 
     bool IsVariableValid(Variable.VariableObj variable)
@@ -358,7 +406,10 @@ public class ResourceManager : ScriptableObject
         resourcesControl.Clear();
         attributes.Clear();
         resources.Clear();
-        myCustomResource.attributes.Clear();
+        if (myCustomResource.attributes != null)
+            myCustomResource.attributes.Clear();
         removeAttribute.Clear();
+        myCustomAttribute = new Attribute.AttributeObj();
+        myCustomResource = new Resource.ResourceObj();
     }
 }

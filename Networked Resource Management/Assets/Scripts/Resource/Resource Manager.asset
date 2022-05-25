@@ -27,3 +27,4 @@ MonoBehaviour:
     attributes: []
     variables: []
   removeAttribute: []
+  removeResource: []

@@ -25,6 +25,11 @@ public class ResourceManagerEditor : Editor
             manager.RemoveAttribute();
         }
 
+        if (GUILayout.Button("Remove Resource"))
+        {
+            manager.RemoveResource();
+        }
+
         if (GUILayout.Button("Clear All"))
         {
             manager.ClearAll();
