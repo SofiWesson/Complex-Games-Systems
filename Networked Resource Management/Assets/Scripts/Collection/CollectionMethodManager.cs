@@ -8,24 +8,26 @@ public class CollectionMethodManager : ScriptableObject
 {
     private List<char> usableChars = new List<char>() { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
-    private List<Attribute.AttributeObj> attributesControl = new List<Attribute.AttributeObj>();
-    private List<CollectionMethod.CollectionMethodObj> collectionMethodControl = new List<CollectionMethod.CollectionMethodObj>();
+    protected List<Attribute.AttributeObj> attributesControl = new List<Attribute.AttributeObj>();
+    protected List<CollectionMethod.CollectionMethodObj> collectionMethodControl = new List<CollectionMethod.CollectionMethodObj>();
 
     [SerializeField]
     [Tooltip("One of the attributes.")]
-    protected List<Attribute.AttributeObj> attributes = new List<Attribute.AttributeObj>();
+    private List<Attribute.AttributeObj> attributes = new List<Attribute.AttributeObj>();
     [SerializeField]
     [Tooltip("One of the collection methods.")]
-    protected List<CollectionMethod.CollectionMethodObj> collectionMethod = new List<CollectionMethod.CollectionMethodObj>();
+    private List<CollectionMethod.CollectionMethodObj> collectionMethod = new List<CollectionMethod.CollectionMethodObj>();
 
     [Space(10)]
     [Tooltip("Create custom attributes.")]
-    public Attribute.AttributeObj myCustomAttribute;
+    [SerializeField]
+    private Attribute.AttributeObj myCustomAttribute;
     [Tooltip("Create custom collection method.")]
-    public CollectionMethod.CollectionMethodObj myCustomCollectionMethod;
+    [SerializeField]
+    private CollectionMethod.CollectionMethodObj myCustomCollectionMethod;
 
     [Serializable]
-    public struct EditableAttribute
+    private struct EditableAttribute
     {
         public string name;
         public Attribute.AttributeObj attribute;
@@ -34,10 +36,11 @@ public class CollectionMethodManager : ScriptableObject
 
     [Space(10)]
     [NonReorderable]
-    public List<EditableAttribute> editAttribute;
+    [SerializeField]
+    private List<EditableAttribute> editAttribute;
 
     [Serializable]
-    public struct EditableCollectionMethod
+    private struct EditableCollectionMethod
     {
         public string name;
         public bool editThis;
@@ -45,10 +48,11 @@ public class CollectionMethodManager : ScriptableObject
     }
 
     [NonReorderable]
-    public List<EditableCollectionMethod> editCollectionMethod;
+    [SerializeField]
+    private List<EditableCollectionMethod> editCollectionMethod;
 
     [Serializable]
-    public struct Removable
+    private struct Removable
     {
         public string name;
         public bool removeThis;
@@ -57,10 +61,17 @@ public class CollectionMethodManager : ScriptableObject
     [Space(10)]
     [NonReorderable]
     [Tooltip("Have 'Remove This' ticked then click the 'Remove Attribute' button to remove one or more attributes")]
-    public List<Removable> removeAttribute;
+    [SerializeField]
+    private List<Removable> removeAttribute;
     [NonReorderable]
     [Tooltip("Have 'Remove This' ticked then click the 'Remove Collection Method' button to remove one or more collection methods")]
-    public List<Removable> removeCollectionMethod;
+    [SerializeField]
+    private List<Removable> removeCollectionMethod;
+
+    public List<CollectionMethod.CollectionMethodObj> GetCollectionMethods()
+    {
+        return collectionMethodControl;
+    }
 
     // -------------------------------------------------- BUTTONS --------------------------------------------------
     public void AddAttributes()
@@ -258,7 +269,22 @@ public class CollectionMethodManager : ScriptableObject
         UpdateEditCollectionMethodList();
     }
 
-    // -------------------------------------------------- OTHER --------------------------------------------------
+    public void ClearAll()
+    {
+        attributesControl.Clear();
+        collectionMethodControl.Clear();
+        attributes.Clear();
+        collectionMethod.Clear();
+        if (myCustomCollectionMethod.attributes != null)
+            myCustomCollectionMethod.attributes.Clear();
+        removeAttribute.Clear();
+        myCustomAttribute = new Attribute.AttributeObj();
+        myCustomCollectionMethod = new CollectionMethod.CollectionMethodObj();
+        editAttribute.Clear();
+        editCollectionMethod.Clear();
+    }
+
+    // -------------------------------------------------- FUNCTIONALITY --------------------------------------------------
     void UpdateCollectionMethodsAttributesList() // Updates the list of attributes in the resources list
     {
         List<Attribute.AttributeObj> tempAttList = new List<Attribute.AttributeObj>();
@@ -499,20 +525,5 @@ public class CollectionMethodManager : ScriptableObject
             editableCollectionMethod.editThis = false;
             editCollectionMethod.Add(editableCollectionMethod);
         }
-    }
-
-    public void ClearAll()
-    {
-        attributesControl.Clear();
-        collectionMethodControl.Clear();
-        attributes.Clear();
-        collectionMethod.Clear();
-        if (myCustomCollectionMethod.attributes != null)
-            myCustomCollectionMethod.attributes.Clear();
-        removeAttribute.Clear();
-        myCustomAttribute = new Attribute.AttributeObj();
-        myCustomCollectionMethod = new CollectionMethod.CollectionMethodObj();
-        editAttribute.Clear();
-        editCollectionMethod.Clear();
     }
 }

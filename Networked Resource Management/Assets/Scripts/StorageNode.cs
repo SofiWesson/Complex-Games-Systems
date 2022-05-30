@@ -5,16 +5,41 @@ using System;
 
 public class StorageNode : MonoBehaviour
 {
-    protected Dictionary<Resource, int> resources = new Dictionary<Resource, int>();
-    protected Dictionary<CollectionMethod, int> collectionMethods = new Dictionary<CollectionMethod, int>();
+    protected Dictionary<int, Resource.ResourceObj> resources = new Dictionary<int, Resource.ResourceObj>();
+    protected Dictionary<int, CollectionMethod.CollectionMethodObj> collectionMethods = new Dictionary<int, CollectionMethod.CollectionMethodObj>();
 
-    private Resource m_resource;
-    private CollectionMethod m_collectionMethod;
+    private ResourceManager m_resourceManager;
+    private CollectionMethodManager m_collectionMethodManager;
+
+    private void Awake()
+    {
+        List<Resource.ResourceObj> resourceObjs = new List<Resource.ResourceObj>();
+        resourceObjs = m_resourceManager.GetResources();
+
+        int id = 0;
+
+        foreach (Resource.ResourceObj resourceObj in resourceObjs)
+        {
+            resources.Add(id, resourceObj);
+            id++;
+        }
+
+        id = 0;
+
+        List<CollectionMethod.CollectionMethodObj> collectionMethodObjs = new List<CollectionMethod.CollectionMethodObj>();
+        collectionMethodObjs = m_collectionMethodManager.GetCollectionMethods();
+
+        foreach (CollectionMethod.CollectionMethodObj collectionMethodObj in collectionMethodObjs)
+        {
+            collectionMethods.Add(id, collectionMethodObj);
+            id++;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame

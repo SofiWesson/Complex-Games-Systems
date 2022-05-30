@@ -6,11 +6,11 @@ using System;
 [CreateAssetMenu(fileName = "Resource Manager", menuName = "Resource Manager/Resource Manager", order = 1)]
 public class ResourceManager : ScriptableObject
 {
-    private List<char> usableChars = new List<char>() { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+    protected List<char> usableChars = new List<char>() { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
     private List<Attribute.AttributeObj> attributesControl = new List<Attribute.AttributeObj>();
     private List<Resource.ResourceObj> resourcesControl = new List<Resource.ResourceObj>();
-
+    
     [SerializeField]
     [Tooltip("One of the attributes.")]
     protected List<Attribute.AttributeObj> attributes = new List<Attribute.AttributeObj>();
@@ -20,12 +20,14 @@ public class ResourceManager : ScriptableObject
 
     [Space(10)]
     [Tooltip("Create custom attributes.")]
-    public Attribute.AttributeObj myCustomAttribute;
+    [SerializeField]
+    protected Attribute.AttributeObj myCustomAttribute;
     [Tooltip("Create custom resources.")]
-    public Resource.ResourceObj myCustomResource;
+    [SerializeField]
+    protected Resource.ResourceObj myCustomResource;
 
     [Serializable]
-    public struct EditableAttribute
+    protected struct EditableAttribute
     {
         public string name;
         public Attribute.AttributeObj attribute;
@@ -34,10 +36,11 @@ public class ResourceManager : ScriptableObject
 
     [Space(10)]
     [NonReorderable]
-    public List<EditableAttribute> editAttribute;
+    [SerializeField]
+    protected List<EditableAttribute> editAttribute;
 
     [Serializable]
-    public struct EditableResource
+    protected struct EditableResource
     {
         public string name;
         public bool editThis;
@@ -45,10 +48,11 @@ public class ResourceManager : ScriptableObject
     }
 
     [NonReorderable]
-    public List<EditableResource> editResource;
+    [SerializeField]
+    protected List<EditableResource> editResource;
 
     [Serializable]
-    public struct Removable
+    protected struct Removable
     {
         public string name;
         public bool removeThis;
@@ -57,10 +61,24 @@ public class ResourceManager : ScriptableObject
     [Space(10)]
     [NonReorderable]
     [Tooltip("Have 'Remove This' ticked then click the 'Remove Attribute' button to remove one or more attributes")]
-    public List<Removable> removeAttribute;
+    [SerializeField]
+    protected List<Removable> removeAttribute;
     [NonReorderable]
     [Tooltip("Have 'Remove This' ticked then click the 'Remove Resource' button to remove one or more resources")]
-    public List<Removable> removeResource;
+    [SerializeField]
+    protected List<Removable> removeResource;
+
+    // -------------------------------------------------- GETTERS --------------------------------------------------
+
+    public List<Resource.ResourceObj> GetResources()
+    {
+        return resourcesControl;
+    }
+
+    public List<Attribute.AttributeObj> GetAttributes()
+    {
+        return attributesControl;
+    }
 
     // -------------------------------------------------- BUTTONS --------------------------------------------------
     public void AddAttributes()
@@ -255,7 +273,22 @@ public class ResourceManager : ScriptableObject
         UpdateEditResourceList();
     }
 
-    // -------------------------------------------------- OTHER --------------------------------------------------
+    public void ClearAll()
+    {
+        attributesControl.Clear();
+        resourcesControl.Clear();
+        attributes.Clear();
+        resources.Clear();
+        if (myCustomResource.attributes != null)
+            myCustomResource.attributes.Clear();
+        removeAttribute.Clear();
+        myCustomAttribute = new Attribute.AttributeObj();
+        myCustomResource = new Resource.ResourceObj();
+        editAttribute.Clear();
+        editResource.Clear();
+    }
+
+    // -------------------------------------------------- FUNCTIONALITY --------------------------------------------------
     void UpdateResourcesAttributesList() // Updates the list of attributes in the resources list
     {
         List<Attribute.AttributeObj> tempAttList = new List<Attribute.AttributeObj>();
@@ -496,20 +529,5 @@ public class ResourceManager : ScriptableObject
             editableResource.editThis = false;
             editResource.Add(editableResource);
         }
-    }
-
-    public void ClearAll()
-    {
-        attributesControl.Clear();
-        resourcesControl.Clear();
-        attributes.Clear();
-        resources.Clear();
-        if (myCustomResource.attributes != null)
-            myCustomResource.attributes.Clear();
-        removeAttribute.Clear();
-        myCustomAttribute = new Attribute.AttributeObj();
-        myCustomResource = new Resource.ResourceObj();
-        editAttribute.Clear();
-        editResource.Clear();
     }
 }
