@@ -26,5 +26,7 @@ MonoBehaviour:
     spirte: {fileID: 0}
     attributes: []
     variables: []
+  editAttribute: []
+  editResource: []
   removeAttribute: []
   removeResource: []

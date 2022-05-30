@@ -25,6 +25,29 @@ public class ResourceManager : ScriptableObject
     public Resource.ResourceObj myCustomResource;
 
     [Serializable]
+    public struct EditableAttribute
+    {
+        public string name;
+        public Attribute.AttributeObj attribute;
+        public bool editThis;
+    }
+
+    [Space(10)]
+    [NonReorderable]
+    public List<EditableAttribute> editAttribute;
+
+    [Serializable]
+    public struct EditableResource
+    {
+        public string name;
+        public bool editThis;
+        public Resource.ResourceObj resource;
+    }
+
+    [NonReorderable]
+    public List<EditableResource> editResource;
+
+    [Serializable]
     public struct Removable
     {
         public string name;
@@ -39,10 +62,7 @@ public class ResourceManager : ScriptableObject
     [Tooltip("Have 'Remove This' ticked then click the 'Remove Resource' button to remove one or more resources")]
     public List<Removable> removeResource;
 
-    // make edits for both attributes and resources
-    // make reload lists incase user has edited viewable lists
-    // comment code
-
+    // -------------------------------------------------- BUTTONS --------------------------------------------------
     public void AddAttributes()
     {
         // checks if attribute name is empty
@@ -74,15 +94,14 @@ public class ResourceManager : ScriptableObject
             }
         }
 
+        // updates lists
         attributesControl.Add(myCustomAttribute);
-        SyncAttributes();
-        myCustomAttribute = new Attribute.AttributeObj();
-        UpdateResourcesAttributesList();
-        removeAttribute = UpdateRemovableList("attribute");
-
         foreach (Resource.ResourceObj resource in resourcesControl)
             resource.attributes.Add(myCustomAttribute);
-        SyncResources();
+
+        ReloadLists();
+
+        myCustomAttribute = new Attribute.AttributeObj();
     }
 
     public void AddResource()
@@ -131,9 +150,52 @@ public class ResourceManager : ScriptableObject
         }
 
         resourcesControl.Add(myCustomResource);
-        SyncResources();
+        ReloadLists();
+
         myCustomResource = new Resource.ResourceObj();
-        removeResource = UpdateRemovableList("resource");
+    }
+
+    public void EditAttribute()
+    {
+        foreach (EditableAttribute editableAttribute in editAttribute)
+        {
+            for (int i = attributesControl.Count - 1; i >= 0; i--)
+            {
+                if (attributesControl[i].name == editableAttribute.name && editableAttribute.editThis)
+                {
+                    attributesControl[i] = editableAttribute.attribute;
+                }
+            }
+
+            foreach (Resource.ResourceObj resource in resourcesControl)
+            {
+                for (int i = resource.attributes.Count - 1; i >= 0; i--)
+                {
+                    if (resource.attributes[i].name == editableAttribute.name && editableAttribute.editThis)
+                    {
+                        resource.attributes[i] = editableAttribute.attribute;
+                    }
+                }
+            }
+        }
+
+        ReloadLists();
+    }
+
+    public void EditResource()
+    {
+        foreach (EditableResource editableResource in editResource)
+        {
+            for (int i = resourcesControl.Count - 1; i >= 0; i--)
+            {
+                if (resourcesControl[i].name == editableResource.name && editableResource.editThis)
+                {
+                    resourcesControl[i] = editableResource.resource;
+                }
+            }
+        }
+
+        ReloadLists();
     }
 
     public void RemoveAttribute()
@@ -162,10 +224,7 @@ public class ResourceManager : ScriptableObject
             }
         }
 
-        SyncAttributes();
-        SyncResources();
-        UpdateResourcesAttributesList();
-        removeAttribute = UpdateRemovableList("attribute");
+        ReloadLists();
     }
 
     public void RemoveResource()
@@ -182,18 +241,28 @@ public class ResourceManager : ScriptableObject
             }
         }
 
-        SyncAttributes();
-        SyncResources();
-        removeResource = UpdateRemovableList("resource");
+        ReloadLists();
     }
 
+    public void ReloadLists()
+    {
+        SyncAttributes();
+        SyncResources();
+        UpdateResourcesAttributesList();
+        removeAttribute = UpdateRemovableList("attribute");
+        removeResource = UpdateRemovableList("resource");
+        UpdateEditAttributeList();
+        UpdateEditResourceList();
+    }
+
+    // -------------------------------------------------- OTHER --------------------------------------------------
     void UpdateResourcesAttributesList() // Updates the list of attributes in the resources list
     {
         List<Attribute.AttributeObj> tempAttList = new List<Attribute.AttributeObj>();
        
         foreach (Attribute.AttributeObj attribute in attributesControl)
         {
-            // to fill the attributes list in the custom resource
+            // fills the attributes list in the custom resource
             Attribute.AttributeObj tempAtt = new Attribute.AttributeObj();
             tempAtt.name = attribute.name;
             tempAtt.variable = attribute.variable;
@@ -237,14 +306,14 @@ public class ResourceManager : ScriptableObject
     bool IsVariableValid(Variable.VariableObj variable)
     {
         #region Name
-        // checks if variable name is empty
+        // is variable name is empty
         if (variable.name == null || variable.name == "")
         {
             Debug.LogAssertion("Variable name can't be empty.");
             return false;
         }
 
-        // checks if variable starts with number
+        // does variable start with a number
         for (int i = 0; i < 10; i++)
         {
             if (variable.name[0] == usableChars[i])
@@ -254,15 +323,15 @@ public class ResourceManager : ScriptableObject
             }
         }
 
+        // checks if variable name only contains '@'
+        if (variable.name.Length == 1 && variable.name == "@")
+        {
+            Debug.LogAssertion("When using '@' in the variable name, there needs to be more then one character.");
+            return false;
+        }
+
         for (int i = 0; i < variable.name.Length;)
         {
-            // checks if variable name only contains '@'
-            if (variable.name.Length == 1 && variable.name == "@")
-            {
-                Debug.LogAssertion("When using '@' in the variable name, there needs to be more then one character.");
-                return false;
-            }
-
             // checks if variable name has '@' anywhere but the start
             if (i != 0 && variable.name[i] == '@')
             {
@@ -288,6 +357,7 @@ public class ResourceManager : ScriptableObject
         #endregion
 
         #region Type
+        // has a variable type been selected
         if (variable.type == Variable.VarialbeTypes.NoCustomVariable)
         {
             Debug.LogAssertion("Variable must hava a type.");
@@ -300,6 +370,7 @@ public class ResourceManager : ScriptableObject
         {
             for (int i = 0; i < variable.value.Length;)
             {
+                // only checks the numbers in usableChars
                 for (int j = 0; j < 10; j++)
                 {
                     if (variable.value[i] == usableChars[j])
@@ -319,6 +390,7 @@ public class ResourceManager : ScriptableObject
         {
             for (int i = 0; i < variable.value.Length;)
             {
+                // only checks the numbers in usableChars
                 for (int j = 0; j < 10; j++)
                 {
                     if (variable.value[i] == usableChars[j] || variable.value[i] == '.')
@@ -400,6 +472,32 @@ public class ResourceManager : ScriptableObject
         resources = temp;
     }
 
+    void UpdateEditAttributeList()
+    {
+        editAttribute.Clear();
+        foreach (Attribute.AttributeObj attributeObj in attributesControl)
+        {
+            EditableAttribute editableAttribute = new EditableAttribute();
+            editableAttribute.name = attributeObj.name;
+            editableAttribute.attribute = attributeObj;
+            editableAttribute.editThis = false;
+            editAttribute.Add(editableAttribute);
+        }
+    }
+
+    void UpdateEditResourceList()
+    {
+        editResource.Clear();
+        foreach (Resource.ResourceObj resourceObj in resourcesControl)
+        {
+            EditableResource editableResource = new EditableResource();
+            editableResource.name = resourceObj.name;
+            editableResource.resource = resourceObj;
+            editableResource.editThis = false;
+            editResource.Add(editableResource);
+        }
+    }
+
     public void ClearAll()
     {
         attributesControl.Clear();
@@ -411,5 +509,7 @@ public class ResourceManager : ScriptableObject
         removeAttribute.Clear();
         myCustomAttribute = new Attribute.AttributeObj();
         myCustomResource = new Resource.ResourceObj();
+        editAttribute.Clear();
+        editResource.Clear();
     }
 }

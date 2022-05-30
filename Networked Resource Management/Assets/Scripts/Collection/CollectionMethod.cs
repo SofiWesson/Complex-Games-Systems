@@ -1,11 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public class CollectionMethod : MonoBehaviour
+public class CollectionMethod : UnityEngine.Object
 {
-    public string collectionMethodName = "";
-    public bool hasCollectionMethod = false;
-    public Sprite sprite = null;
-    protected Attribute attributes;
+    [Serializable]
+    public struct CollectionMethodObj
+    {
+        public string name;
+        public int countInInventory;
+        public Sprite spirte;
+        [NonReorderable]
+        public List<Attribute.AttributeObj> attributes;
+        public List<Variable.VariableObj> variables;
+    }
 }
