@@ -9,20 +9,20 @@ public class CollectionMethodManager : ScriptableObject
     private List<char> usableChars = new List<char>() { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
     private List<Attribute.AttributeObj> attributesControl = new List<Attribute.AttributeObj>();
-    private List<Resource.ResourceObj> resourcesControl = new List<Resource.ResourceObj>();
+    private List<CollectionMethod.CollectionMethodObj> collectionMethodControl = new List<CollectionMethod.CollectionMethodObj>();
 
     [SerializeField]
     [Tooltip("One of the attributes.")]
     protected List<Attribute.AttributeObj> attributes = new List<Attribute.AttributeObj>();
     [SerializeField]
-    [Tooltip("One of the resources.")]
-    protected List<Resource.ResourceObj> resources = new List<Resource.ResourceObj>();
+    [Tooltip("One of the collection methods.")]
+    protected List<CollectionMethod.CollectionMethodObj> collectionMethod = new List<CollectionMethod.CollectionMethodObj>();
 
     [Space(10)]
     [Tooltip("Create custom attributes.")]
     public Attribute.AttributeObj myCustomAttribute;
-    [Tooltip("Create custom resources.")]
-    public Resource.ResourceObj myCustomResource;
+    [Tooltip("Create custom collection method.")]
+    public CollectionMethod.CollectionMethodObj myCustomCollectionMethod;
 
     [Serializable]
     public struct EditableAttribute
@@ -37,15 +37,15 @@ public class CollectionMethodManager : ScriptableObject
     public List<EditableAttribute> editAttribute;
 
     [Serializable]
-    public struct EditableResource
+    public struct EditableCollectionMethod
     {
         public string name;
         public bool editThis;
-        public Resource.ResourceObj resource;
+        public CollectionMethod.CollectionMethodObj collectionMethod;
     }
 
     [NonReorderable]
-    public List<EditableResource> editResource;
+    public List<EditableCollectionMethod> editCollectionMethod;
 
     [Serializable]
     public struct Removable
@@ -59,8 +59,8 @@ public class CollectionMethodManager : ScriptableObject
     [Tooltip("Have 'Remove This' ticked then click the 'Remove Attribute' button to remove one or more attributes")]
     public List<Removable> removeAttribute;
     [NonReorderable]
-    [Tooltip("Have 'Remove This' ticked then click the 'Remove Resource' button to remove one or more resources")]
-    public List<Removable> removeResource;
+    [Tooltip("Have 'Remove This' ticked then click the 'Remove Collection Method' button to remove one or more collection methods")]
+    public List<Removable> removeCollectionMethod;
 
     // -------------------------------------------------- BUTTONS --------------------------------------------------
     public void AddAttributes()
@@ -96,41 +96,41 @@ public class CollectionMethodManager : ScriptableObject
 
         // updates lists
         attributesControl.Add(myCustomAttribute);
-        foreach (Resource.ResourceObj resource in resourcesControl)
-            resource.attributes.Add(myCustomAttribute);
+        foreach (CollectionMethod.CollectionMethodObj collectionMethod in collectionMethodControl)
+            collectionMethod.attributes.Add(myCustomAttribute);
 
         ReloadLists();
 
         myCustomAttribute = new Attribute.AttributeObj();
     }
 
-    public void AddResource()
+    public void AddCollectionMethod()
     {
         // checks if resource name is empty
-        if (myCustomResource.name == null || myCustomResource.name == "")
+        if (myCustomCollectionMethod.name == null || myCustomCollectionMethod.name == "")
         {
-            Debug.LogAssertion("Resource name can't be empty.");
+            Debug.LogAssertion("Collection Method name can't be empty.");
             return;
         }
 
-        for (int i = 0; i < myCustomResource.variables.Count; i++) //Variable.VariableObj variable in myCustomResource.variables)
+        for (int i = 0; i < myCustomCollectionMethod.variables.Count; i++)
         {
-            if (!IsVariableValid(myCustomResource.variables[i]))
+            if (!IsVariableValid(myCustomCollectionMethod.variables[i]))
                 return;
 
-            Variable.VariableObj variable = myCustomResource.variables[i];
-            variable.value = CorrectVariables(myCustomResource.variables[i]);
-            myCustomResource.variables[i] = variable;
+            Variable.VariableObj variable = myCustomCollectionMethod.variables[i];
+            variable.value = CorrectVariables(myCustomCollectionMethod.variables[i]);
+            myCustomCollectionMethod.variables[i] = variable;
         }
 
         // check if two variables have same name
-        for (int i = 0; i < myCustomResource.variables.Count; i++)
+        for (int i = 0; i < myCustomCollectionMethod.variables.Count; i++)
         {
-            for (int j = 0; j < myCustomResource.variables.Count; j++)
+            for (int j = 0; j < myCustomCollectionMethod.variables.Count; j++)
             {
                 if (j != i)
                 {
-                    if (myCustomResource.variables[j].name == myCustomResource.variables[i].name)
+                    if (myCustomCollectionMethod.variables[j].name == myCustomCollectionMethod.variables[i].name)
                     {
                         Debug.LogAssertion("Two variables on this resource have the same name, this is not allowed.");
                         return;
@@ -139,20 +139,20 @@ public class CollectionMethodManager : ScriptableObject
             }
         }
 
-        foreach (Resource.ResourceObj resource in resources)
+        foreach (CollectionMethod.CollectionMethodObj collectionMethod in collectionMethod)
         {
             // check if a resource already as name
-            if (myCustomResource.name == resource.name)
+            if (myCustomCollectionMethod.name == collectionMethod.name)
             {
-                Debug.LogAssertion("Resource already has this name.");
+                Debug.LogAssertion("Collection Method already has this name.");
                 return;
             }
         }
 
-        resourcesControl.Add(myCustomResource);
+        collectionMethodControl.Add(myCustomCollectionMethod);
         ReloadLists();
 
-        myCustomResource = new Resource.ResourceObj();
+        myCustomCollectionMethod = new CollectionMethod.CollectionMethodObj();
     }
 
     public void EditAttribute()
@@ -167,13 +167,13 @@ public class CollectionMethodManager : ScriptableObject
                 }
             }
 
-            foreach (Resource.ResourceObj resource in resourcesControl)
+            foreach (CollectionMethod.CollectionMethodObj collectionMethod in collectionMethodControl)
             {
-                for (int i = resource.attributes.Count - 1; i >= 0; i--)
+                for (int i = collectionMethod.attributes.Count - 1; i >= 0; i--)
                 {
-                    if (resource.attributes[i].name == editableAttribute.name && editableAttribute.editThis)
+                    if (collectionMethod.attributes[i].name == editableAttribute.name && editableAttribute.editThis)
                     {
-                        resource.attributes[i] = editableAttribute.attribute;
+                        collectionMethod.attributes[i] = editableAttribute.attribute;
                     }
                 }
             }
@@ -182,15 +182,18 @@ public class CollectionMethodManager : ScriptableObject
         ReloadLists();
     }
 
-    public void EditResource()
+    public void EditCollectionMethod()
     {
-        foreach (EditableResource editableResource in editResource)
+        foreach (EditableCollectionMethod editableCollectionMethod in editCollectionMethod)
         {
-            for (int i = resourcesControl.Count - 1; i >= 0; i--)
+            for (int i = collectionMethodControl.Count - 1; i >= 0; i--)
             {
-                if (resourcesControl[i].name == editableResource.name && editableResource.editThis)
+                CollectionMethod.CollectionMethodObj collectionMethodObj = new CollectionMethod.CollectionMethodObj();
+
+                if (collectionMethodControl[i].name == editableCollectionMethod.name && editableCollectionMethod.editThis)
                 {
-                    resourcesControl[i] = editableResource.resource;
+                    collectionMethodObj = editableCollectionMethod.collectionMethod;
+                    collectionMethodControl[i] = collectionMethodObj;
                 }
             }
         }
@@ -211,13 +214,13 @@ public class CollectionMethodManager : ScriptableObject
                 }
             }
 
-            foreach (Resource.ResourceObj resource in resourcesControl)
+            foreach (CollectionMethod.CollectionMethodObj collectionMethod in collectionMethodControl)
             {
-                for (int i = resource.attributes.Count - 1; i >= 0; i--)
+                for (int i = collectionMethod.attributes.Count - 1; i >= 0; i--)
                 {
-                    if (resource.attributes[i].name == removableAttribute.name && removableAttribute.removeThis)
+                    if (collectionMethod.attributes[i].name == removableAttribute.name && removableAttribute.removeThis)
                     {
-                        resource.attributes.Remove(resource.attributes[i]);
+                        collectionMethod.attributes.Remove(collectionMethod.attributes[i]);
                         continue;
                     }
                 }
@@ -227,15 +230,15 @@ public class CollectionMethodManager : ScriptableObject
         ReloadLists();
     }
 
-    public void RemoveResource()
+    public void RemoveCollectionMethod()
     {
-        foreach (Removable removableResource in removeResource)
+        foreach (Removable removableCollectionMethod in removeCollectionMethod)
         {
-            for (int i = resourcesControl.Count - 1; i >= 0; i--)
+            for (int i = collectionMethodControl.Count - 1; i >= 0; i--)
             {
-                if (resourcesControl[i].name == removableResource.name && removableResource.removeThis)
+                if (collectionMethodControl[i].name == removableCollectionMethod.name && removableCollectionMethod.removeThis)
                 {
-                    resourcesControl.Remove(resourcesControl[i]);
+                    collectionMethodControl.Remove(collectionMethodControl[i]);
                     continue;
                 }
             }
@@ -247,16 +250,16 @@ public class CollectionMethodManager : ScriptableObject
     public void ReloadLists()
     {
         SyncAttributes();
-        SyncResources();
-        UpdateResourcesAttributesList();
+        SyncCollectionMethods();
+        UpdateCollectionMethodsAttributesList();
         removeAttribute = UpdateRemovableList("attribute");
-        removeResource = UpdateRemovableList("resource");
+        removeCollectionMethod = UpdateRemovableList("collection");
         UpdateEditAttributeList();
-        UpdateEditResourceList();
+        UpdateEditCollectionMethodList();
     }
 
     // -------------------------------------------------- OTHER --------------------------------------------------
-    void UpdateResourcesAttributesList() // Updates the list of attributes in the resources list
+    void UpdateCollectionMethodsAttributesList() // Updates the list of attributes in the resources list
     {
         List<Attribute.AttributeObj> tempAttList = new List<Attribute.AttributeObj>();
 
@@ -269,11 +272,11 @@ public class CollectionMethodManager : ScriptableObject
             tempAttList.Add(tempAtt);
         }
 
-        myCustomResource.attributes = tempAttList;
+        myCustomCollectionMethod.attributes = tempAttList;
     }
 
     /// <summary>
-    /// <paramref name="listToEdit"/> requires "attribute" or "resource"
+    /// <paramref name="listToEdit"/> requires "attribute" or "collection"
     /// </summary>
     List<Removable> UpdateRemovableList(string listToEdit)
     {
@@ -289,12 +292,12 @@ public class CollectionMethodManager : ScriptableObject
                 tempRemovableList.Add(tempRemove);
             }
         }
-        else if (listToEdit == "resource")
+        else if (listToEdit == "collection")
         {
-            foreach (Resource.ResourceObj resource in resourcesControl)
+            foreach (CollectionMethod.CollectionMethodObj collectionMethod in collectionMethodControl)
             {
                 Removable tempRemove = new Removable();
-                tempRemove.name = resource.name;
+                tempRemove.name = collectionMethod.name;
                 tempRemove.removeThis = false;
                 tempRemovableList.Add(tempRemove);
             }
@@ -462,14 +465,14 @@ public class CollectionMethodManager : ScriptableObject
         attributes = temp;
     }
 
-    void SyncResources()
+    void SyncCollectionMethods()
     {
-        List<Resource.ResourceObj> temp = new List<Resource.ResourceObj>();
-        foreach (Resource.ResourceObj resource in resourcesControl)
+        List<CollectionMethod.CollectionMethodObj> temp = new List<CollectionMethod.CollectionMethodObj>();
+        foreach (CollectionMethod.CollectionMethodObj collectionMethod in collectionMethodControl)
         {
-            temp.Add(resource);
+            temp.Add(collectionMethod);
         }
-        resources = temp;
+        collectionMethod = temp;
     }
 
     void UpdateEditAttributeList()
@@ -485,31 +488,31 @@ public class CollectionMethodManager : ScriptableObject
         }
     }
 
-    void UpdateEditResourceList()
+    void UpdateEditCollectionMethodList()
     {
-        editResource.Clear();
-        foreach (Resource.ResourceObj resourceObj in resourcesControl)
+        editCollectionMethod.Clear();
+        foreach (CollectionMethod.CollectionMethodObj collectionMethod in collectionMethodControl)
         {
-            EditableResource editableResource = new EditableResource();
-            editableResource.name = resourceObj.name;
-            editableResource.resource = resourceObj;
-            editableResource.editThis = false;
-            editResource.Add(editableResource);
+            EditableCollectionMethod editableCollectionMethod = new EditableCollectionMethod();
+            editableCollectionMethod.name = collectionMethod.name;
+            editableCollectionMethod.collectionMethod = collectionMethod;
+            editableCollectionMethod.editThis = false;
+            editCollectionMethod.Add(editableCollectionMethod);
         }
     }
 
     public void ClearAll()
     {
         attributesControl.Clear();
-        resourcesControl.Clear();
+        collectionMethodControl.Clear();
         attributes.Clear();
-        resources.Clear();
-        if (myCustomResource.attributes != null)
-            myCustomResource.attributes.Clear();
+        collectionMethod.Clear();
+        if (myCustomCollectionMethod.attributes != null)
+            myCustomCollectionMethod.attributes.Clear();
         removeAttribute.Clear();
         myCustomAttribute = new Attribute.AttributeObj();
-        myCustomResource = new Resource.ResourceObj();
+        myCustomCollectionMethod = new CollectionMethod.CollectionMethodObj();
         editAttribute.Clear();
-        editResource.Clear();
+        editCollectionMethod.Clear();
     }
 }

@@ -17,7 +17,7 @@ public class CollectionMethodEditor : Editor
 
         if (GUILayout.Button("Add Collection Method"))
         {
-            manager.AddResource();
+            manager.AddCollectionMethod();
         }
 
         if (GUILayout.Button("Edit Attribute"))
@@ -27,7 +27,7 @@ public class CollectionMethodEditor : Editor
 
         if (GUILayout.Button("Edit Collection Method"))
         {
-            manager.EditResource();
+            manager.EditCollectionMethod();
         }
 
         if (GUILayout.Button("Remove Attribute"))
@@ -37,7 +37,7 @@ public class CollectionMethodEditor : Editor
 
         if (GUILayout.Button("Remove Collection Method"))
         {
-            manager.RemoveResource();
+            manager.RemoveCollectionMethod();
         }
 
         if (GUILayout.Button("Reload Lists"))
