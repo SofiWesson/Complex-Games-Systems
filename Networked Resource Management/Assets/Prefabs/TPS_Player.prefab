@@ -529,13 +529,12 @@ GameObject:
   - component: {fileID: 1250930671108053362}
   - component: {fileID: 8886813533744978874}
   - component: {fileID: -1073468995597198444}
-  - component: {fileID: 307916571567060818}
   - component: {fileID: 8657257952875605309}
-  - component: {fileID: 3065821865793988573}
-  - component: {fileID: 7972075064994811091}
-  - component: {fileID: 6257956301800904528}
-  - component: {fileID: 5628060275421875012}
-  - component: {fileID: -8604660517641907410}
+  - component: {fileID: 3550087865139555324}
+  - component: {fileID: 2876120421247701409}
+  - component: {fileID: 8462611076064731190}
+  - component: {fileID: 2504030624359607605}
+  - component: {fileID: 249280647728841061}
   m_Layer: 2
   m_Name: TPS_Player
   m_TagString: Player
@@ -789,21 +788,6 @@ MonoBehaviour:
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
---- !u!114 &307916571567060818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1250930671108053259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7892c259775c96a4a97541d55378f6d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  marker: {fileID: 0}
 --- !u!114 &8657257952875605309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -820,7 +804,33 @@ MonoBehaviour:
   syncInterval: 0.1
   clientAuthority: 1
   animator: {fileID: 1250930671108053260}
---- !u!114 &3065821865793988573
+--- !u!114 &3550087865139555324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250930671108053259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 857c3a785dbb05f48ac761aa0e9f638e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  m_aimCam: {fileID: 0}
+  m_camSensitivity: 2
+  m_aimCamSensitivity: 0.5
+  m_aimLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  m_bulletSpawnPos: {fileID: 0}
+  m_bulletPrefab: {fileID: 0}
+  shotDistance: 200
+  animationLayerTransitionRate: 10
+  missedRaycastDistance: 200
+  m_aimMarkerTransform: {fileID: 1250930670245321848}
+--- !u!114 &2876120421247701409
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -841,7 +851,22 @@ MonoBehaviour:
   movement: 0
   cursorLocked: 0
   cursorInputLook: 1
---- !u!114 &7972075064994811091
+--- !u!114 &8462611076064731190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250930671108053259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7892c259775c96a4a97541d55378f6d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  marker: {fileID: 0}
+--- !u!114 &2504030624359607605
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -871,33 +896,7 @@ MonoBehaviour:
   cameraClampOverride: 0
   lockCamPosition: 0
   cameraSensitivity: 1
---- !u!114 &6257956301800904528
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1250930671108053259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 857c3a785dbb05f48ac761aa0e9f638e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  m_aimCam: {fileID: 0}
-  m_camSensitivity: 0
-  m_aimCamSensitivity: 0
-  m_aimLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  m_bulletSpawnPos: {fileID: 0}
-  m_bulletPrefab: {fileID: 0}
-  shotDistance: 200
-  animationLayerTransitionRate: 10
-  missedRaycastDistance: 200
-  m_aimMarkerTransform: {fileID: 1250930670245321848}
---- !u!114 &5628060275421875012
+--- !u!114 &249280647728841061
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -911,21 +910,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  casualCamPrefab: {fileID: 2835876313498320952, guid: f3116e1953243094fb6f6ad880d0bb8c, type: 3}
-  aimCamPrefab: {fileID: 2302248067930726163, guid: 680c06a87e6565344b0dc281dc6ab746, type: 3}
+  casualCamPrefab: {fileID: 0}
+  aimCamPrefab: {fileID: 0}
   camBase: {fileID: 1250930671028424173}
---- !u!114 &-8604660517641907410
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1250930671108053259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed681d08586d9724284281c6ee789b23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1250930671437549267
 GameObject:
   m_ObjectHideFlags: 0

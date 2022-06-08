@@ -1,0 +1,13 @@
+{
+	"name": "com.Sofi.ResourceManager",
+	"version": "1.0.0",
+	"displayName": "Resource Manager",
+	"unity": "2020.3",
+	"unityRelease": "5f1",
+	"dependencies": {
+		"com.mirror-networking.Mirror": "66.0.9"
+	},
+	"author": {
+		"name": "Sofi"
+	}
+}
