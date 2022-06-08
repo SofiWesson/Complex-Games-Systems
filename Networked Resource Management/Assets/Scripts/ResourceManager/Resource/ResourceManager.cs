@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Mirror;
 
 [CreateAssetMenu(fileName = "Resource Manager", menuName = "Resource Manager/Resource Manager", order = 1)]
 public class ResourceManager : ScriptableObject
@@ -71,12 +72,13 @@ public class ResourceManager : ScriptableObject
     private List<Removable> removeResource;
 
     // -------------------------------------------------- GETTERS --------------------------------------------------
-
+    [Command]
     public List<Resource.ResourceObj> GetResources()
     {
         return resourcesControl;
     }
 
+    [Command]
     public List<Attribute.AttributeObj> GetAttributes()
     {
         return attributesControl;

@@ -48,14 +48,13 @@ public class MarkerMoverNetwork : NetworkBehaviour
             return;
 
         // click to move a marker
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if (Mouse.current.leftButton.wasPressedThisFrame)
+            RaycastHit hit;
+            Vector3 mousePos = Mouse.current.position.ReadValue();
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out hit))
             {
-                RaycastHit hit;
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
-                {
-                    CmdSetMarker(hit.point);
-                }
+                CmdSetMarker(hit.point);
             }
         }
     }

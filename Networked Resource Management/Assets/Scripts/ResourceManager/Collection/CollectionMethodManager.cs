@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Mirror;
 
 [CreateAssetMenu(fileName = "Collection Method Manager", menuName = "Resource Manager/Collection Method Manager", order = 2)]
 public class CollectionMethodManager : ScriptableObject
@@ -68,9 +69,16 @@ public class CollectionMethodManager : ScriptableObject
     [SerializeField]
     private List<Removable> removeCollectionMethod;
 
+    [Command]
     public List<CollectionMethod.CollectionMethodObj> GetCollectionMethods()
     {
         return collectionMethodControl;
+    }
+
+    [Command]
+    public List<Attribute.AttributeObj> GetAttributes()
+    {
+        return attributesControl;
     }
 
     // -------------------------------------------------- BUTTONS --------------------------------------------------

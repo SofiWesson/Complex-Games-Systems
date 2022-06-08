@@ -535,6 +535,7 @@ GameObject:
   - component: {fileID: 7972075064994811091}
   - component: {fileID: 6257956301800904528}
   - component: {fileID: 5628060275421875012}
+  - component: {fileID: -8604660517641907410}
   m_Layer: 2
   m_Name: TPS_Player
   m_TagString: Player
@@ -838,7 +839,7 @@ MonoBehaviour:
   shoot: 0
   run: 0
   movement: 0
-  cursorLocked: 1
+  cursorLocked: 0
   cursorInputLook: 1
 --- !u!114 &7972075064994811091
 MonoBehaviour:
@@ -913,6 +914,18 @@ MonoBehaviour:
   casualCamPrefab: {fileID: 2835876313498320952, guid: f3116e1953243094fb6f6ad880d0bb8c, type: 3}
   aimCamPrefab: {fileID: 2302248067930726163, guid: 680c06a87e6565344b0dc281dc6ab746, type: 3}
   camBase: {fileID: 1250930671028424173}
+--- !u!114 &-8604660517641907410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250930671108053259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed681d08586d9724284281c6ee789b23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1250930671437549267
 GameObject:
   m_ObjectHideFlags: 0
