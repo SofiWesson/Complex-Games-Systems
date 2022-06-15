@@ -910,8 +910,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  casualCamPrefab: {fileID: 0}
-  aimCamPrefab: {fileID: 0}
+  casualCamPrefab: {fileID: 2835876313498320952, guid: f3116e1953243094fb6f6ad880d0bb8c, type: 3}
+  aimCamPrefab: {fileID: 2302248067930726163, guid: 680c06a87e6565344b0dc281dc6ab746, type: 3}
   camBase: {fileID: 1250930671028424173}
 --- !u!1 &1250930671437549267
 GameObject:
