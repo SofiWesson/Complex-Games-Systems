@@ -23,7 +23,9 @@ public class TestStorage : MonoBehaviour
             {
                 StorageNode storage = hit.transform.GetComponent<StorageNode>();
 
-                Debug.Log(storage.GetItemAmount("Water"));
+                storage.AddItemAmount("Water", 5);
+
+                Debug.Log(storage.GetItemAmount("Water") + "L of water");
             }
         }
     }

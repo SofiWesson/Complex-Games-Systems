@@ -16,6 +16,10 @@ namespace EasyResourceManager
         public ResourcesManager m_resourceManager;
         public CollectionMethodManager m_collectionMethodManager;
 
+        // used in functions for comparasion
+        private Resource.ResourceObj m_emptyResouce = new Resource.ResourceObj();
+        private CollectionMethod.CollectionMethodObj m_emptyCollectionMethod = new CollectionMethod.CollectionMethodObj();
+        
         private void Awake()
         {
             List<Resource.ResourceObj> resourceObjs = new List<Resource.ResourceObj>();
@@ -77,6 +81,28 @@ namespace EasyResourceManager
             return collectionObj;
         }
 
+        public List<Resource.ResourceObj> GetResources()
+        {
+            return resources;
+        }
+
+        public List<CollectionMethod.CollectionMethodObj> GetCollectionMethods()
+        {
+            return collectionMethods;
+        }
+
+        public Tuple<List<Resource.ResourceObj>, List<CollectionMethod.CollectionMethodObj>> GetContents()
+        {
+            Tuple<List<Resource.ResourceObj>, List<CollectionMethod.CollectionMethodObj>> tuple =
+                new Tuple<List<Resource.ResourceObj>, List<CollectionMethod.CollectionMethodObj>>(resources, collectionMethods);
+
+            return tuple;
+        }
+
+        /// <summary>
+        /// Returns -1 if no item found.
+        /// </summary>
+        /// <returns></returns>
         [ClientCallback]
         public float GetItemAmount(string itemName)
         {
@@ -84,62 +110,49 @@ namespace EasyResourceManager
 
             CompareFunctions compare = new CompareFunctions();
 
-            Resource.ResourceObj emptyResouce = new Resource.ResourceObj();
-            CollectionMethod.CollectionMethodObj emptyCollectionMethod = new CollectionMethod.CollectionMethodObj();
-
             Resource.ResourceObj resource = GetResource(itemName);
             CollectionMethod.CollectionMethodObj collectionMethod = GetCollectionMethod(itemName);
 
-            if (!compare.CompareResources(resource, emptyResouce))
+            if (!compare.CompareResources(resource, m_emptyResouce))
                 returnAmount = resource.countInInventory;
-            else if (!compare.CompareCollectionMethods(collectionMethod, emptyCollectionMethod))
+            else if (!compare.CompareCollectionMethods(collectionMethod, m_emptyCollectionMethod))
                 returnAmount = collectionMethod.countInInventory;
 
             return returnAmount;
         }
 
-        //[ClientCallback]
-        // public Dictionary<int, Resource.ResourceObj> GetResources()
-        // {
-        //     return resources;
-        // }
-        // 
-        // public Dictionary<int, CollectionMethod.CollectionMethodObj> GetCollectionMethods()
-        // {
-        //     return collectionMethods;
-        // }
-
-        [Command]
-        public void SetItemAmount(string itemName, float amount) // make work with CollectionMethod
+        [ClientCallback]
+        public void AddItemAmount(string itemName, float amount)
         {
-            Resource.ResourceObj resourceObj = GetResource(itemName);
-            resourceObj.countInInventory = amount;
+            CompareFunctions compare = new CompareFunctions();
 
-            for (int i = 0; i < resources.Count; i++)
+            Resource.ResourceObj resource = GetResource(itemName);
+            CollectionMethod.CollectionMethodObj collectionMethod = GetCollectionMethod(itemName);
+
+            if (!compare.CompareResources(resource, m_emptyResouce))
             {
-                if (resources[i].name == resourceObj.name)
+                resource.countInInventory += amount;
+
+                for (int i = 0; i < resources.Count; i++)
                 {
-                    resources[i] = resourceObj;
+                    if (resources[i].name == resource.name)
+                    {
+                        resources[i] = resource;
+                    }
                 }
             }
-        }
+            else if (!compare.CompareCollectionMethods(collectionMethod, m_emptyCollectionMethod))
+            {
+                collectionMethod.countInInventory += amount;
 
-        [Command]
-        public void SetItemAmount(CollectionMethod.CollectionMethodObj item, float amount)
-        {
-            item.countInInventory = amount;
-        }
-
-        [Command]
-        public void AddItemAmount(Resource.ResourceObj item, float amount)
-        {
-
-        }
-
-        [Command]
-        public void AddItemAmount(CollectionMethod.CollectionMethodObj item, float amount)
-        {
-
+                for (int i = 0; i < collectionMethods.Count; i++)
+                {
+                    if (collectionMethods[i].name == collectionMethod.name)
+                    {
+                        collectionMethods[i] = collectionMethod;
+                    }
+                }
+            }
         }
     }
 }
