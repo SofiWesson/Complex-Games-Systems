@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Mirror;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace EasyResourceManager
 {
     public class StorageNode : NetworkBehaviour
     {
-        protected Dictionary<int, Resource.ResourceObj> resources = new Dictionary<int, Resource.ResourceObj>();
-        protected Dictionary<int, CollectionMethod.CollectionMethodObj> collectionMethods = new Dictionary<int, CollectionMethod.CollectionMethodObj>();
+        private List<Resource.ResourceObj> resources = new List<Resource.ResourceObj>();
+        private List<CollectionMethod.CollectionMethodObj> collectionMethods = new List<CollectionMethod.CollectionMethodObj>();
 
         public ResourcesManager m_resourceManager;
         public CollectionMethodManager m_collectionMethodManager;
@@ -19,17 +21,13 @@ namespace EasyResourceManager
             List<Resource.ResourceObj> resourceObjs = new List<Resource.ResourceObj>();
             resourceObjs = m_resourceManager.GetResources();
 
-            int id = 0;
             if (resourceObjs.Count > 0)
             {
                 foreach (Resource.ResourceObj resourceObj in resourceObjs)
                 {
-                    resources.Add(id, resourceObj);
-                    id++;
+                    resources.Add(resourceObj);
                 }
             }
-
-            id = 0;
 
             List<CollectionMethod.CollectionMethodObj> collectionMethodObjs = new List<CollectionMethod.CollectionMethodObj>();
 
@@ -40,56 +38,108 @@ namespace EasyResourceManager
             {
                 foreach (CollectionMethod.CollectionMethodObj collectionMethodObj in collectionMethodObjs)
                 {
-                    collectionMethods.Add(id, collectionMethodObj);
-                    id++;
+                    collectionMethods.Add(collectionMethodObj);
                 }
             }
+        }
+
+        [ServerCallback]
+        private Resource.ResourceObj GetResource(string resourceName)
+        {
+            Resource.ResourceObj resourceObj = new Resource.ResourceObj();
+
+            foreach (Resource.ResourceObj resource in resources)
+            {
+                if (resource.name == resourceName)
+                {
+                    resourceObj = resource;
+                    continue;
+                }
+            }
+
+            return resourceObj;
+        }
+
+        [ServerCallback]
+        private CollectionMethod.CollectionMethodObj GetCollectionMethod(string collectionName)
+        {
+            CollectionMethod.CollectionMethodObj collectionObj = new CollectionMethod.CollectionMethodObj();
+
+            foreach (CollectionMethod.CollectionMethodObj collectionMethod in collectionMethods)
+            {
+                if (collectionObj.name == collectionName)
+                {
+                    collectionObj = collectionMethod;
+                    continue;
+                }
+            }
+
+            return collectionObj;
         }
 
         [ClientCallback]
         public float GetItemAmount(string itemName)
         {
-            float returnAmount = 0;
+            float returnAmount = -1;
 
-            foreach (Resource.ResourceObj resource in resources.Values)
-            {
-                if (resource.name == itemName)
-                {
-                    returnAmount = resource.countInInventory;
-                    continue;
-                }
-            }
+            CompareFunctions compare = new CompareFunctions();
+
+            Resource.ResourceObj emptyResouce = new Resource.ResourceObj();
+            CollectionMethod.CollectionMethodObj emptyCollectionMethod = new CollectionMethod.CollectionMethodObj();
+
+            Resource.ResourceObj resource = GetResource(itemName);
+            CollectionMethod.CollectionMethodObj collectionMethod = GetCollectionMethod(itemName);
+
+            if (!compare.CompareResources(resource, emptyResouce))
+                returnAmount = resource.countInInventory;
+            else if (!compare.CompareCollectionMethods(collectionMethod, emptyCollectionMethod))
+                returnAmount = collectionMethod.countInInventory;
 
             return returnAmount;
         }
 
-        [ClientCallback]
-        public float GetItemAmount(CollectionMethod.CollectionMethodObj item)
-        {
-            return item.countInInventory;
-        }
-
-        [ClientCallback]
-        public Dictionary<int, Resource.ResourceObj> GetResources()
-        {
-            return resources;
-        }
-
-        public Dictionary<int, CollectionMethod.CollectionMethodObj> GetCollectionMethods()
-        {
-            return collectionMethods;
-        }
+        //[ClientCallback]
+        // public Dictionary<int, Resource.ResourceObj> GetResources()
+        // {
+        //     return resources;
+        // }
+        // 
+        // public Dictionary<int, CollectionMethod.CollectionMethodObj> GetCollectionMethods()
+        // {
+        //     return collectionMethods;
+        // }
 
         [Command]
-        public void SetItemAmount(Resource.ResourceObj item, float amount)
+        public void SetItemAmount(string itemName, float amount) // make work with CollectionMethod
         {
-            item.countInInventory = amount;
+            Resource.ResourceObj resourceObj = GetResource(itemName);
+            resourceObj.countInInventory = amount;
+
+            for (int i = 0; i < resources.Count; i++)
+            {
+                if (resources[i].name == resourceObj.name)
+                {
+                    resources[i] = resourceObj;
+                }
+            }
         }
 
         [Command]
         public void SetItemAmount(CollectionMethod.CollectionMethodObj item, float amount)
         {
             item.countInInventory = amount;
+        }
+
+        [Command]
+        public void AddItemAmount(Resource.ResourceObj item, float amount)
+        {
+
+        }
+
+        [Command]
+        public void AddItemAmount(CollectionMethod.CollectionMethodObj item, float amount)
+        {
+
         }
     }
 }
