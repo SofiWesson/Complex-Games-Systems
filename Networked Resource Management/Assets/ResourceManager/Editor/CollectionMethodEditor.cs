@@ -1,53 +1,56 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(CollectionMethodManager))]
-public class CollectionMethodEditor : Editor
+namespace EasyResourceManager
 {
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(CollectionMethodManager))]
+    public class CollectionMethodEditor : Editor
     {
-        base.OnInspectorGUI();
-
-        CollectionMethodManager manager = (CollectionMethodManager)target;
-
-        if (GUILayout.Button("Add Attribute"))
+        public override void OnInspectorGUI()
         {
-            manager.AddAttributes();
-        }
+            base.OnInspectorGUI();
 
-        if (GUILayout.Button("Add Collection Method"))
-        {
-            manager.AddCollectionMethod();
-        }
+            CollectionMethodManager manager = (CollectionMethodManager)target;
 
-        if (GUILayout.Button("Edit Attribute"))
-        {
-            manager.EditAttribute();
-        }
+            if (GUILayout.Button("Add Attribute"))
+            {
+                manager.AddAttributes();
+            }
 
-        if (GUILayout.Button("Edit Collection Method"))
-        {
-            manager.EditCollectionMethod();
-        }
+            if (GUILayout.Button("Add Collection Method"))
+            {
+                manager.AddCollectionMethod();
+            }
 
-        if (GUILayout.Button("Remove Attribute"))
-        {
-            manager.RemoveAttribute();
-        }
+            if (GUILayout.Button("Edit Attribute"))
+            {
+                manager.EditAttribute();
+            }
 
-        if (GUILayout.Button("Remove Collection Method"))
-        {
-            manager.RemoveCollectionMethod();
-        }
+            if (GUILayout.Button("Edit Collection Method"))
+            {
+                manager.EditCollectionMethod();
+            }
 
-        if (GUILayout.Button("Reload Lists"))
-        {
-            manager.ReloadLists();
-        }
+            if (GUILayout.Button("Remove Attribute"))
+            {
+                manager.RemoveAttribute();
+            }
 
-        if (GUILayout.Button("Clear All"))
-        {
-            manager.ClearAll();
+            if (GUILayout.Button("Remove Collection Method"))
+            {
+                manager.RemoveCollectionMethod();
+            }
+
+            if (GUILayout.Button("Reload Lists"))
+            {
+                manager.ReloadLists();
+            }
+
+            if (GUILayout.Button("Clear All"))
+            {
+                manager.ClearAll();
+            }
         }
     }
 }

@@ -1,53 +1,56 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(ResourcesManager))]
-public class ResourceManagerEditor : Editor
+namespace EasyResourceManager
 {
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(ResourcesManager))]
+    public class ResourceManagerEditor : Editor
     {
-        base.OnInspectorGUI();
-
-        ResourcesManager manager = (ResourcesManager)target;
-
-        if (GUILayout.Button("Add Attribute"))
+        public override void OnInspectorGUI()
         {
-            manager.AddAttributes();
-        }
+            base.OnInspectorGUI();
 
-        if (GUILayout.Button("Add Resource"))
-        {
-            manager.AddResource();
-        }
+            ResourcesManager manager = (ResourcesManager)target;
 
-        if (GUILayout.Button("Edit Attribute"))
-        {
-            manager.EditAttribute();
-        }
+            if (GUILayout.Button("Add Attribute"))
+            {
+                manager.AddAttributes();
+            }
 
-        if (GUILayout.Button("Edit Resource"))
-        {
-            manager.EditResource();
-        }
+            if (GUILayout.Button("Add Resource"))
+            {
+                manager.AddResource();
+            }
 
-        if (GUILayout.Button("Remove Attribute"))
-        {
-            manager.RemoveAttribute();
-        }
+            if (GUILayout.Button("Edit Attribute"))
+            {
+                manager.EditAttribute();
+            }
 
-        if (GUILayout.Button("Remove Resource"))
-        {
-            manager.RemoveResource();
-        }
+            if (GUILayout.Button("Edit Resource"))
+            {
+                manager.EditResource();
+            }
 
-        if (GUILayout.Button("Reload Lists"))
-        {
-            manager.ReloadLists();
-        }
+            if (GUILayout.Button("Remove Attribute"))
+            {
+                manager.RemoveAttribute();
+            }
 
-        if (GUILayout.Button("Clear All"))
-        {
-            manager.ClearAll();
+            if (GUILayout.Button("Remove Resource"))
+            {
+                manager.RemoveResource();
+            }
+
+            if (GUILayout.Button("Reload Lists"))
+            {
+                manager.ReloadLists();
+            }
+
+            if (GUILayout.Button("Clear All"))
+            {
+                manager.ClearAll();
+            }
         }
     }
 }
