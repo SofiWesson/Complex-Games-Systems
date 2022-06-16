@@ -81,16 +81,19 @@ namespace EasyResourceManager
             return collectionObj;
         }
 
+        [ClientCallback]
         public List<Resource.ResourceObj> GetResources()
         {
             return resources;
         }
 
+        [ClientCallback]
         public List<CollectionMethod.CollectionMethodObj> GetCollectionMethods()
         {
             return collectionMethods;
         }
 
+        [ClientCallback]
         public Tuple<List<Resource.ResourceObj>, List<CollectionMethod.CollectionMethodObj>> GetContents()
         {
             Tuple<List<Resource.ResourceObj>, List<CollectionMethod.CollectionMethodObj>> tuple =

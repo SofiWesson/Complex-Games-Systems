@@ -673,6 +673,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StorageNode_Template (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5488721625498436859, guid: 5915e860036aca1488a41b3c797ac1f9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5488721625498436860, guid: 5915e860036aca1488a41b3c797ac1f9, type: 3}
       propertyPath: m_RootOrder
       value: 1
